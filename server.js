@@ -1,9 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
+const User = require('./models/user');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -36,7 +38,7 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true }
 }, { timestamps: true });
 
-const User = mongoose.model('User', UserSchema);
+// const User = mongoose.model('User', UserSchema);
 
 // Schema Catatan Kesehatan (Tergantung ke userId)
 const HealthDaySchema = new mongoose.Schema({
