@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Better Tomorrow - Daily Health Tracker</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <h1><i class="fa-solid fa-seedling"></i> Better Tomorrow</h1>
+            <p>Aplikasi Pelacak Kesehatan & Kebiasaan Harian</p>
+        </div>
+        <!-- Bar User Profile & Logout -->
+        <div id="user-bar" class="user-bar hidden">
+            <span>Halo, <b id="user-display-name">User</b>!</span>
+            <button class="btn btn-logout" id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- HALAMAN 0: LOGIN & REGISTER -->
+        <section id="page-auth" class="page active">
+            <div class="auth-card">
+                <!-- Toggle Form Login / Register -->
+                <div class="auth-tabs">
+                    <button id="tab-login" class="tab-btn active">Masuk</button>
+                    <button id="tab-register" class="tab-btn">Daftar Akun</button>
+                </div>
+
+                <!-- Form Login -->
+                <form id="form-login" class="auth-form">
+                    <h2>Selamat Datang Kembali!</h2>
+                    <p class="subtitle">Masuk untuk mengakses riwayat kesehatanmu</p>
+                    <div class="form-field">
+                        <label>Username</label>
+                        <input type="text" id="login-username" required placeholder="Masukkan username">
+                    </div>
+                    <div class="form-field">
+                        <label>Password</label>
+                        <input type="password" id="login-password" required placeholder="Masukkan password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Masuk Sekarang</button>
+                </form>
+
+                <!-- Form Register -->
+                <form id="form-register" class="auth-form hidden">
+                    <h2>Buat Akun Baru</h2>
+                    <p class="subtitle">Mulai perjalanan hidup sehatmu hari ini</p>
+                    <div class="form-field">
+                        <label>Username</label>
+                        <input type="text" id="reg-username" required placeholder="Pilih username">
+                    </div>
+                    <div class="form-field">
+                        <label>Email</label>
+                        <input type="email" id="reg-email" required placeholder="contoh@email.com">
+                    </div>
+                    <div class="form-field">
+                        <label>Password</label>
+                        <input type="password" id="reg-password" required placeholder="Buat password aman">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Daftar Akun</button>
+                </form>
+            </div>
+        </section>
+        
+        <!-- HALAMAN 1: Dashboard List Hari -->
+        <section id="page-1" class="page">
+            <div class="page-header">
+                <div>
+                    <h2>Daftar Hari Perjalananmu</h2>
+                    <p class="subtitle">Pilih hari untuk mengisi atau melihat catatan kesehatanmu</p>
+                </div>
+                <button class="btn btn-primary" id="btn-add-day"><i class="fa-solid fa-plus"></i> Tambah Hari Baru</button>
+            </div>
+
+            <div class="days-grid" id="days-container"></div>
+        </section>
+
+        <!-- HALAMAN 2: Form Input Detail Kesehatan -->
+        <section id="page-2" class="page">
+            <div class="page-header">
+                <button class="btn btn-secondary" id="btn-back"><i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar Hari</button>
+                <div class="date-picker-wrap">
+                    <label for="current-date">Tanggal Log:</label>
+                    <input type="date" id="current-date">
+                </div>
+            </div>
+
+            <h2 id="current-day-title" style="margin-bottom: 20px;">Form Detail Hari</h2>
+
+            <div class="grid">
+                <!-- Kalori & Makanan -->
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-utensils text-orange"></i> Makanan & Kalori</div>
+                    <div class="input-group">
+                        <input type="text" id="food-name" placeholder="Nama makanan">
+                        <input type="number" id="food-cal" placeholder="kcal" style="width: 80px;">
+                        <button class="btn btn-primary" id="btn-add-food"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <div class="progress-box">
+                        <div class="progress-info">
+                            <span>Total: <b id="total-cal">0</b> / 2000 kcal</span>
+                            <span id="cal-pct">0%</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill bg-orange" id="cal-bar"></div></div>
+                    </div>
+                    <ul class="item-list" id="food-list"></ul>
+                </div>
+
+                <!-- Langkah Kaki -->
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-shoe-prints text-green"></i> Langkah Kaki</div>
+                    <div class="input-group">
+                        <input type="number" id="step-input" placeholder="Jumlah langkah (misal: 5000)">
+                        <button class="btn btn-primary" id="btn-save-steps">Simpan</button>
+                    </div>
+                    <div class="progress-box">
+                        <div class="progress-info">
+                            <span>Progress: <b id="total-steps">0</b> / 10000</span>
+                            <span id="step-pct">0%</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill bg-green" id="step-bar"></div></div>
+                    </div>
+                </div>
+
+                <!-- Olahraga -->
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-person-running text-purple"></i> Aktivitas Olahraga</div>
+                    <div class="input-group">
+                        <input type="text" id="workout-name" placeholder="Jenis (Jogging, Gym)">
+                        <input type="number" id="workout-min" placeholder="Menit" style="width: 80px;">
+                        <button class="btn btn-primary" id="btn-add-workout"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <ul class="item-list" id="workout-list"></ul>
+                </div>
+
+                <!-- Asupan Air -->
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-droplet text-blue"></i> Asupan Air Minum</div>
+                    <p class="subtitle">Target: 8 Gelas per hari</p>
+                    <div class="water-grid" id="water-container"></div>
+                </div>
+
+                <!-- Kebersihan -->
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-shower text-blue"></i> Rutinitas Kebersihan</div>
+                    <div class="checklist">
+                        <label class="check-item"><input type="checkbox" id="check-shower"> <span>Mandi 2x Sehari</span></label>
+                        <label class="check-item"><input type="checkbox" id="check-teeth"> <span>Sikat Gigi Pagi & Malam</span></label>
+                        <label class="check-item"><input type="checkbox" id="check-skincare"> <span>Perawatan Diri / Skincare</span></label>
+                    </div>
+                </div>
+
+                <!-- Tidur & Jurnal -->
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-moon text-purple"></i> Tidur & Refleksi Harian</div>
+                    <div class="form-field">
+                        <label>Durasi Tidur Semalam (Jam):</label>
+                        <input type="number" id="sleep-hours" placeholder="Contoh: 7.5" step="0.5">
+                    </div>
+                    <div class="form-field">
+                        <label>Catatan Jurnal Kecil:</label>
+                        <textarea id="daily-notes" rows="3" placeholder="Apa hal baik yang kamu lakukan hari ini?"></textarea>
+                    </div>
+                    <button class="btn btn-primary" id="btn-save-journal" style="width: 100%;">Simpan Catatan</button>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
