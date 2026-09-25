@@ -1,0 +1,231 @@
+/* ==========================================
+   SMART HEALTH PLAN STYLES (plan.css)
+   ========================================== */
+.plan-body {
+  background: var(--color-bg-light);
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  flex: 1;
+}
+
+.plan-container {
+  width: 100%;
+  max-width: 850px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 36px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.back-link {
+  display: inline-block;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.plan-header h1 {
+  font-size: 26px;
+  color: var(--color-primary);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.plan-header p {
+  color: var(--color-text-sub);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+/* Generator Input Form */
+.generator-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 28px;
+}
+
+.generator-card h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-main);
+  margin-bottom: 16px;
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin-bottom: 8px;
+}
+
+.input-group select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 14px;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.input-group select:focus {
+  border-color: var(--color-primary);
+}
+
+.btn-block {
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-block:hover {
+  background-color: var(--color-primary-light);
+}
+
+/* Result Area */
+.plan-result.hidden {
+  display: none;
+}
+
+.plan-result h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.target-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.target-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.target-icon {
+  font-size: 26px;
+}
+
+.text-blue { color: #38bdf8; }
+.text-orange { color: #f97316; }
+.text-green { color: #22c55e; }
+.text-purple { color: #a855f7; }
+
+.target-card h4 {
+  font-size: 12px;
+  color: var(--color-text-sub);
+  margin-bottom: 4px;
+}
+
+.target-card p {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.mt-section {
+  margin-top: 32px;
+}
+
+/* Meals Recommendation Section */
+.meals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.meal-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.meal-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.meal-header h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.icon-breakfast { color: #eab308; }
+.icon-lunch { color: #f97316; }
+.icon-dinner { color: #6366f1; }
+
+.meal-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 6px;
+}
+
+.meal-desc {
+  font-size: 12px;
+  color: var(--color-text-sub);
+  line-height: 1.4;
+  flex: 1;
+  margin-bottom: 12px;
+}
+
+.meal-badge {
+  align-self: flex-start;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* Responsif Mobile */
+@media (max-width: 600px) {
+  .plan-container {
+    padding: 20px 16px;
+  }
+}

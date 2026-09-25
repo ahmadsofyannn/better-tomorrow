@@ -1,0 +1,111 @@
+/* ==========================================
+   HOME / DASHBOARD STYLES (index.html)
+   ========================================== */
+main {
+  flex: 1;
+}
+
+.hero-section {
+  max-width: 1200px;
+  margin: 40px auto 60px auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.hero-header h1 {
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 16px;
+}
+
+.hero-header p {
+  font-size: 16px;
+  color: var(--color-text-sub);
+  max-width: 640px;
+  margin: 0 auto 50px auto;
+  line-height: 1.6;
+}
+
+/* GRID 4 FITUR UTAMA */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.feature-card {
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.card-link {
+  padding: 32px 22px;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+
+.feature-card.mint { background: var(--bg-mint); }
+.feature-card.blue { background: var(--bg-blue); }
+.feature-card.yellow { background: var(--bg-yellow); }
+.feature-card.soft-mint { background: var(--bg-soft-mint); }
+
+.icon-box {
+  font-size: 38px;
+  color: var(--color-primary);
+  margin-bottom: 20px;
+}
+
+.feature-card h2 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.feature-card p {
+  font-size: 13px;
+  color: #4a5568;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.card-arrow {
+  margin-top: auto;
+  font-size: 16px;
+  color: var(--color-primary);
+  transition: transform 0.2s ease;
+}
+
+.feature-card:hover .card-arrow {
+  transform: translateX(4px);
+}
+
+/* Responsif Tablet & HP */
+@media (max-width: 992px) {
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-header h1 {
+    font-size: 28px;
+  }
+}

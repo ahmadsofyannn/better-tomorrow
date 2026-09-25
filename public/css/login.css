@@ -1,0 +1,179 @@
+/* Layout Kontainer Utama Login */
+.auth-body {
+  background-color: var(--color-bg-light, #f8fafc);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 960px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+/* Kolom Kiri - Form */
+.auth-card-form {
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-header {
+  margin-bottom: 28px;
+}
+
+.auth-logo {
+  font-size: 32px;
+  color: var(--color-primary, #10b981);
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.auth-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.auth-header p {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  border-color: var(--color-primary, #10b981);
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 14px;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.toggle-password:hover {
+  color: #475569;
+}
+
+.form-options {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.forgot-link {
+  font-size: 13px;
+  color: var(--color-primary, #10b981);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-footer-text {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.auth-footer-text a {
+  color: var(--color-primary, #10b981);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Kolom Kanan - Banner Visual */
+.auth-card-banner {
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  color: #ffffff;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-content h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.banner-content p {
+  font-size: 14px;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+.banner-image-wrapper {
+  margin-top: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.banner-img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Responsif Layar HP/Tablet */
+@media (max-width: 768px) {
+  .auth-container {
+    grid-template-columns: 1fr;
+  }
+  .auth-card-banner {
+    display: none; /* Sembunyikan banner visual saat dibuka di layar HP */
+  }
+  .auth-card-form {
+    padding: 28px 20px;
+  }
+}

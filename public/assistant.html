@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Health Assistant - Better Tomorrow</title>
+
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- CSS Eksternal -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/assistant.css" />
+</head>
+<body>
+
+  <!-- NAVBAR GLOBAL -->
+  <header class="main-header">
+    <nav class="navbar" aria-label="Navigasi Utama">
+      <a href="index.html" class="logo">Better Tomorrow</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="journal.html">Keseharian</a></li>
+        <li><a href="bmi.html">IMT Calculator</a></li>
+        <li><a href="assistant.html" class="active">AI Assistant</a></li>
+        <li><a href="plan.html">Health Plan</a></li>
+        <li><a href="login.html" class="nav-btn-login">Masuk</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="assistant-body">
+    <div class="assistant-container">
+      
+      <header class="assistant-header">
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
+        <h1>AI Health Assistant</h1>
+        <p>Konsultasi gaya hidup sehat, rekomendasi nutrisi, dan tips olahraga bersama AI Pintar.</p>
+      </header>
+
+      <!-- CHAT INTERFACE CARD -->
+      <section class="chat-card" aria-label="Antarmuka Chat AI">
+        
+        <!-- MESSAGES CONTAINER -->
+        <div class="chat-messages" id="chatMessages" role="log" aria-live="polite">
+          <article class="message bot-message">
+            <div class="avatar" aria-hidden="true"><i class="fa-solid fa-robot"></i></div>
+            <div class="msg-bubble">
+              Halo! Saya Asisten Sehat <strong>Better Tomorrow</strong>. Kamu bisa menanyakan tips menu sehat, stretching ringan saat kerja, atau cara tidur nyenyak. Ada yang bisa saya bantu?
+            </div>
+          </article>
+        </div>
+
+        <!-- QUICK CHIPS / SUGGESTIONS -->
+        <div class="quick-chips" aria-label="Rekomendasi Pertanyaan Cepat">
+          <button type="button" class="chip-btn" data-query="Rekomendasi menu makan siang 500 kalori">Menu 500 Kalori</button>
+          <button type="button" class="chip-btn" data-query="Cara mengatasi pegal leher saat kerja">Pegal Leher</button>
+          <button type="button" class="chip-btn" data-query="Tips cepat tidur nyenyak di malam hari">Tips Tidur Nyenyak</button>
+        </div>
+
+        <!-- INPUT FORM -->
+        <form id="chatForm" class="chat-input-area">
+          <input type="text" id="chatInput" placeholder="Tanyakan seputar kesehatan & gaya hidup..." autocomplete="off" required aria-label="Pesan Anda" />
+          <button type="submit" class="btn-send" aria-label="Kirim Pesan"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER GLOBAL -->
+  <footer class="main-footer">
+    <nav class="footer-nav" aria-label="Navigasi Footer">
+      <ul class="footer-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="journal.html">Journal</a></li>
+        <li><a href="bmi.html">IMT</a></li>
+        <li><a href="assistant.html">AI Assistant</a></li>
+        <li><a href="plan.html">Plan</a></li>
+      </ul>
+    </nav>
+    <p class="copyright">&copy; 2026 Better Tomorrow. All rights reserved.</p>
+  </footer>
+
+  <!-- JS Eksternal -->
+  <script src="js/app.js"></script>
+  <script src="js/assistant.js"></script>
+</body>
+</html>

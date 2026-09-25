@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Health Plan Generator - Better Tomorrow</title>
+
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- CSS Eksternal -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/plan.css" />
+</head>
+<body>
+
+  <!-- NAVBAR GLOBAL -->
+  <header class="main-header">
+    <nav class="navbar" aria-label="Navigasi Utama">
+      <a href="index.html" class="logo">Better Tomorrow</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="journal.html">Keseharian</a></li>
+        <li><a href="bmi.html">IMT Calculator</a></li>
+        <li><a href="assistant.html">AI Assistant</a></li>
+        <li><a href="plan.html" class="active">Health Plan</a></li>
+        <li><a href="login.html" class="nav-btn-login">Masuk</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="plan-body">
+    <div class="plan-container">
+      
+      <header class="plan-header">
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
+        <h1>Smart Health Plan Generator</h1>
+        <p>Rekomendasi program sehat harian dan target nutrisi otomatis sesuai target pribadimu.</p>
+      </header>
+
+      <!-- CARD INPUT GENERATOR -->
+      <section class="generator-card" aria-label="Form Generator Program Sehat">
+        <h2>Atur Target & Aktivitas Harian</h2>
+        <form id="planForm">
+          <div class="input-grid">
+            
+            <div class="input-group">
+              <label for="goalSelect"><i class="fa-solid fa-bullseye"></i> Target Utama (Goal)</label>
+              <select id="goalSelect">
+                <option value="weight_loss">Turun Berat Badan</option>
+                <option value="maintain" selected>Menjaga Berat Badan & Bugar</option>
+                <option value="muscle_gain">Meningkatkan Massa Otot</option>
+                <option value="better_sleep">Memperbaiki Tidur & Kurangi Stres</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label for="activitySelect"><i class="fa-solid fa-person-walking"></i> Tingkat Aktivitas Harian</label>
+              <select id="activitySelect">
+                <option value="sedentary">Jarang Olahraga (Banyak Duduk)</option>
+                <option value="moderate" selected>Moderat (Olahraga 1-3x / minggu)</option>
+                <option value="active">Sangat Aktif (Olahraga >4x / minggu)</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label for="dietSelect"><i class="fa-solid fa-utensils"></i> Tipe Diet / Pola Makan</label>
+              <select id="dietSelect">
+                <option value="balanced" selected>Seimbang (Nusantara Sehat)</option>
+                <option value="high_protein">Tinggi Protein</option>
+                <option value="low_carb">Rendah Karbohidrat</option>
+                <option value="vegetarian">Vegetarian / Berbasis Nabati</option>
+              </select>
+            </div>
+
+          </div>
+
+          <button type="submit" id="btnGenerate" class="btn-primary btn-block">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Buat Rekomendasi Program
+          </button>
+        </form>
+      </section>
+
+      <!-- HASIL HASIL REKOMENDASI -->
+      <section id="planResult" class="plan-result hidden" aria-label="Hasil Rekomendasi Program Sehat">
+        <h2><i class="fa-solid fa-calendar-check"></i> Target Aksi Harian</h2>
+        <div class="target-cards-grid">
+          
+          <article class="target-card">
+            <i class="fa-solid fa-glass-water target-icon text-blue" aria-hidden="true"></i>
+            <div>
+              <h4>Air Minum</h4>
+              <p id="targetWater">8 Gelas (2000 ml)</p>
+            </div>
+          </article>
+
+          <article class="target-card">
+            <i class="fa-solid fa-fire target-icon text-orange" aria-hidden="true"></i>
+            <div>
+              <h4>Target Kalori</h4>
+              <p id="targetCalories">2,000 kcal / hari</p>
+            </div>
+          </article>
+
+          <article class="target-card">
+            <i class="fa-solid fa-person-running target-icon text-green" aria-hidden="true"></i>
+            <div>
+              <h4>Rekomendasi Olahraga</h4>
+              <p id="targetWorkout">30 Menit Cardio / Jalan Cepat</p>
+            </div>
+          </article>
+
+          <article class="target-card">
+            <i class="fa-solid fa-moon target-icon text-purple" aria-hidden="true"></i>
+            <div>
+              <h4>Target Tidur</h4>
+              <p id="targetSleep">7 - 8 Jam</p>
+            </div>
+          </article>
+
+        </div>
+
+        <h2 class="mt-section"><i class="fa-solid fa-bowl-food"></i> Rekomendasi Menu Makan Hari Ini</h2>
+        <div class="meals-grid">
+          
+          <article class="meal-card">
+            <header class="meal-header">
+              <i class="fa-solid fa-sun icon-breakfast" aria-hidden="true"></i>
+              <h3>Sarapan Pagi</h3>
+            </header>
+            <p class="meal-title" id="breakfastTitle">-</p>
+            <p class="meal-desc" id="breakfastDesc">-</p>
+            <span class="meal-badge" id="breakfastCal">- kcal</span>
+          </article>
+
+          <article class="meal-card">
+            <header class="meal-header">
+              <i class="fa-solid fa-cloud-sun icon-lunch" aria-hidden="true"></i>
+              <h3>Makan Siang</h3>
+            </header>
+            <p class="meal-title" id="lunchTitle">-</p>
+            <p class="meal-desc" id="lunchDesc">-</p>
+            <span class="meal-badge" id="lunchCal">- kcal</span>
+          </article>
+
+          <article class="meal-card">
+            <header class="meal-header">
+              <i class="fa-solid fa-moon icon-dinner" aria-hidden="true"></i>
+              <h3>Makan Malam</h3>
+            </header>
+            <p class="meal-title" id="dinnerTitle">-</p>
+            <p class="meal-desc" id="dinnerDesc">-</p>
+            <span class="meal-badge" id="dinnerCal">- kcal</span>
+          </article>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER GLOBAL -->
+  <footer class="main-footer">
+    <nav class="footer-nav" aria-label="Navigasi Footer">
+      <ul class="footer-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="journal.html">Journal</a></li>
+        <li><a href="bmi.html">IMT</a></li>
+        <li><a href="assistant.html">AI Assistant</a></li>
+        <li><a href="plan.html">Plan</a></li>
+      </ul>
+    </nav>
+    <p class="copyright">&copy; 2026 Better Tomorrow. All rights reserved.</p>
+  </footer>
+
+  <!-- JS Eksternal -->
+  <script src="js/app.js"></script>
+  <script src="js/plan.js"></script>
+</body>
+</html>

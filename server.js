@@ -5,19 +5,36 @@ const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+// Model User (diambil dari file terpisah atau di-import)
 const User = require('./models/user');
+
+// Inisialisasi Transporter Nodemailer (Ethereal / Custom)
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST || 'smtp.ethereal.email',
+  port: process.env.EMAIL_PORT || 587,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+// Inisialisasi Gemini AI SDK
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// Middleware Global
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Konfigurasi Sesi Login (Session)
 app.use(session({
-    secret: 'better-tomorrow-secret-key-12345',
+    secret: process.env.SESSION_SECRET || 'better-tomorrow-secret-key-12345',
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 24 * 60 * 60 * 1000 } // Sesi berlaku 1 hari
@@ -30,15 +47,6 @@ mongoose.connect(MONGO_URI)
     .catch(err => console.error('❌ Gagal Koneksi DB:', err));
 
 // 2. Mongoose Schemas & Models
-
-// Schema Pengguna (User)
-const UserSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
-}, { timestamps: true });
-
-// const User = mongoose.model('User', UserSchema);
 
 // Schema Catatan Kesehatan (Tergantung ke userId)
 const HealthDaySchema = new mongoose.Schema({
@@ -58,9 +66,8 @@ const HealthDaySchema = new mongoose.Schema({
     notes: { type: String, default: '' }
 }, { timestamps: true });
 
-// Kombinasi userId + dayNumber harus unik agar tidak ada dayNumber ganda per user
+// Kombinasi userId + dayNumber unik per user
 HealthDaySchema.index({ userId: 1, dayNumber: 1 }, { unique: true });
-
 const HealthDay = mongoose.model('HealthDay', HealthDaySchema);
 
 // Middleware Proteksi Rute (Harus Login)
@@ -71,9 +78,9 @@ const requireAuth = (req, res, next) => {
     next();
 };
 
-// --- REST API ENDPOINTS ---
-
-// A. AUTENTIKASI (REGISTER, LOGIN, LOGOUT, ME)
+// =============================================================
+// A. AUTENTIKASI (REGISTER, LOGIN, LOGOUT, ME, FORGOT/RESET PASSWORD)
+// =============================================================
 
 // Register User Baru
 app.post('/api/auth/register', async (req, res) => {
@@ -138,9 +145,140 @@ app.get('/api/auth/me', (req, res) => {
     }
 });
 
-// B. DATA KESEHATAN (DIPROTEKSI DENGAN USER ID)
+// Endpoint Minta Kode OTP Lupa Password
+app.post('/api/forgot-password', async (req, res) => {
+  const { email } = req.body;
 
-// GET: Ambil Semua Hari Milik User yang Sedang Login
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'Email tidak ditemukan' });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    user.resetPasswordOTP = otp;
+    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
+    await user.save();
+
+    const mailOptions = {
+      from: `"Better Tomorrow Support" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: 'Kode Verifikasi Lupa Password',
+      text: `Kode OTP pemulihan password Anda adalah: ${otp}. Berlaku selama 10 menit.`
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ message: 'Kode OTP berhasil dikirim ke email.' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Gagal mengirim email verifikasi.' });
+  }
+});
+
+// Endpoint Reset Password dengan OTP
+app.post('/api/reset-password', async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({
+      email,
+      resetPasswordOTP: otp,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Kode OTP tidak valid atau sudah kadaluwarsa' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+
+    user.resetPasswordOTP = null;
+    user.resetPasswordExpires = null;
+    await user.save();
+
+    res.json({ message: 'Password berhasil diperbarui!' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Gagal memperbarui password.' });
+  }
+});
+
+// =============================================================
+// B. AI INTEGRATION (GEMINI API ASSISTANT & PLAN GENERATOR)
+// =============================================================
+
+// Endpoint Chat AI Assistant (Dipakai oleh assistant.js)
+app.post('/api/chat', async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (!message) {
+      return res.status(400).json({ error: 'Pesan tidak boleh kosong.' });
+    }
+
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    
+    const prompt = `Anda adalah 'Better Tomorrow AI', asisten kesehatan personal yang ramah, suportif, dan informatif.
+Jawablah pertanyaan/keluhan pengguna berikut dengan bahasa Indonesia yang santun, empatik, dan praktis:
+"${message}"`;
+
+    const result = await model.generateContent(prompt);
+    const responseText = result.response.text();
+
+    return res.json({ reply: responseText });
+  } catch (error) {
+    console.error('Error /api/chat:', error);
+    return res.status(500).json({ error: 'Gagal memproses permintaan AI Assistant.' });
+  }
+});
+
+// Endpoint Smart Health Plan Generator (Dipakai oleh plan.js)
+app.post('/api/generate-plan', async (req, res) => {
+  try {
+    const { goal, activity, diet } = req.body;
+
+    const model = genAI.getGenerativeModel({ 
+      model: 'gemini-1.5-flash',
+      generationConfig: { responseMimeType: 'application/json' } 
+    });
+
+    const prompt = `Buatkan program kesehatan harian terstruktur berdasarkan kriteria berikut:
+- Target Utama (Goal): ${goal}
+- Tingkat Aktivitas: ${activity}
+- Tipe Diet: ${diet}
+
+Berikan output HANYA dalam format JSON murni dengan struktur persis seperti ini:
+{
+  "waterGlasses": "8 Gelas (2000 ml)",
+  "calories": "2,000 kcal / hari",
+  "workout": "30 Menit Cardio / Jalan Cepat",
+  "sleep": "7 - 8 Jam",
+  "meals": {
+    "breakfast": { "title": "Nama Sarapan", "desc": "Deskripsi bahan dan porsi", "cal": "350 kcal" },
+    "lunch": { "title": "Nama Makan Siang", "desc": "Deskripsi bahan dan porsi", "cal": "600 kcal" },
+    "dinner": { "title": "Nama Makan Malam", "desc": "Deskripsi bahan dan porsi", "cal": "450 kcal" }
+  }
+}`;
+
+    const result = await model.generateContent(prompt);
+    const planData = JSON.parse(result.response.text());
+
+    return res.json({ success: true, plan: planData });
+  } catch (error) {
+    console.error('Error /api/generate-plan:', error);
+    return res.status(500).json({ error: 'Gagal merancang program sehat via AI.' });
+  }
+});
+
+// =============================================================
+// C. DATA KESEHATAN JOURNAL (DIPROTEKSI REQUIREAUTH)
+// =============================================================
+
+// GET: Ambil Semua Hari Milik User
 app.get('/api/health', requireAuth, async (req, res) => {
     try {
         const days = await HealthDay.find({ userId: req.session.userId }).sort({ dayNumber: 1 });
@@ -189,7 +327,12 @@ app.put('/api/health/:dayNumber', requireAuth, async (req, res) => {
     }
 });
 
+// Fallback Route untuk Single Page App / Direct Navigation
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // Start Server
 app.listen(PORT, () => {
-    console.log(`🚀 Server berjalan di http://localhost:${PORT}`);
+    console.log(`🚀 Server Better Tomorrow berjalan di http://localhost:${PORT}`);
 });

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catatan Keseharian - Better Tomorrow</title>
+
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- CSS Eksternal -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/journal.css" />
+</head>
+<body>
+
+  <!-- NAVBAR GLOBAL -->
+  <header class="main-header">
+    <nav class="navbar" aria-label="Navigasi Utama">
+      <a href="index.html" class="logo">Better Tomorrow</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="journal.html" class="active">Keseharian</a></li>
+        <li><a href="bmi.html">IMT Calculator</a></li>
+        <li><a href="assistant.html">AI Assistant</a></li>
+        <li><a href="plan.html">Health Plan</a></li>
+        <li><a href="login.html" class="nav-btn-login">Masuk</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="journal-body">
+    <div class="journal-container">
+      
+      <header class="journal-header">
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
+        <h1>Catatan Keseharian</h1>
+        <p>Pantau perasaan dan kebiasaan sehatmu hari ini secara mendetail.</p>
+      </header>
+
+      <form id="journalForm" class="journal-form">
+        
+        <!-- 1. MOOD SELECTOR -->
+        <fieldset class="journal-section mood-fieldset">
+          <legend class="section-title">Bagaimana perasaanmu hari ini?</legend>
+          <div class="mood-selector">
+            <label class="mood-option">
+              <input type="radio" name="mood" value="happy" />
+              <span class="mood-box"><i class="fa-regular fa-face-smile"></i> Senang</span>
+            </label>
+            <label class="mood-option">
+              <input type="radio" name="mood" value="energized" />
+              <span class="mood-box"><i class="fa-solid fa-bolt"></i> Semangat</span>
+            </label>
+            <label class="mood-option">
+              <input type="radio" name="mood" value="calm" />
+              <span class="mood-box"><i class="fa-regular fa-face-smile-beam"></i> Tenang</span>
+            </label>
+            <label class="mood-option">
+              <input type="radio" name="mood" value="tired" />
+              <span class="mood-box"><i class="fa-regular fa-face-tired"></i> Lelah</span>
+            </label>
+            <label class="mood-option">
+              <input type="radio" name="mood" value="stressed" />
+              <span class="mood-box"><i class="fa-regular fa-face-frown"></i> Stres</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- 2. TRACKER DETAIL KESEHARIAN -->
+        <section class="journal-section">
+          <h2 class="section-title">Target Kebiasaan Sehat</h2>
+          
+          <div class="tracker-grid">
+
+            <!-- CARD 1: MINUM AIR (8 GELAS INTERAKTIF) -->
+            <article class="tracker-card card-water">
+              <header class="card-title">
+                <i class="fa-solid fa-glass-water icon-title"></i>
+                <div>
+                  <h3>Minum Air (Target 8 Gelas / 2L)</h3>
+                  <span id="waterCounter" class="sub-counter">0 dari 8 Gelas (0 ml)</span>
+                </div>
+              </header>
+              <div class="water-glasses-container" id="waterGlassesContainer">
+                <div class="glass-item" data-index="1" title="Gelas 1 (250 ml)"><i class="fa-solid fa-glass-water"></i></div>
+                <div class="glass-item" data-index="2" title="Gelas 2 (500 ml)"><i class="fa-solid fa-glass-water"></i></div>
+                <div class="glass-item" data-index="3" title="Gelas 3 (750 ml)"><i class="fa-solid fa-glass-water"></i></div>
+                <div class="glass-item" data-index="4" title="Gelas 4 (1000 ml)"><i class="fa-solid fa-glass-water"></i></div>
+                <div class="glass-item" data-index="5" title="Gelas 5 (1250 ml)"><i class="fa-solid fa-glass-water"></i></div>
+                <div class="glass-item" data-index="6" title="Gelas 6 (1500 ml)"><i class="fa-solid fa-glass-water"></i></div>
+                <div class="glass-item" data-index="7" title="Gelas 7 (1750 ml)"><i class="fa-solid fa-glass-water"></i></div>
+                <div class="glass-item" data-index="8" title="Gelas 8 (2000 ml)"><i class="fa-solid fa-glass-water"></i></div>
+              </div>
+            </article>
+
+            <!-- CARD 2: OLAHRAGA (DURASI, PACE, JARAK) -->
+            <article class="tracker-card card-workout">
+              <header class="card-title">
+                <i class="fa-solid fa-person-running icon-title"></i>
+                <h3>Aktivitas Olahraga</h3>
+              </header>
+              <div class="input-row-three">
+                <div class="input-group">
+                  <label for="workoutDuration">Durasi (Menit)</label>
+                  <input type="number" id="workoutDuration" placeholder="cth: 30" min="0" />
+                </div>
+                <div class="input-group">
+                  <label for="workoutDistance">Jarak (km)</label>
+                  <input type="number" step="0.1" id="workoutDistance" placeholder="cth: 3.5" min="0" />
+                </div>
+                <div class="input-group">
+                  <label for="workoutPace">Pace (menit/km)</label>
+                  <input type="text" id="workoutPace" placeholder="cth: 6'30''" />
+                </div>
+              </div>
+            </article>
+
+            <!-- CARD 3: WAKTU TIDUR (SIANG & MALAM) -->
+            <article class="tracker-card card-sleep">
+              <header class="card-title">
+                <i class="fa-solid fa-moon icon-title"></i>
+                <h3>Pola Tidur Harian</h3>
+              </header>
+              
+              <!-- Tidur Malam -->
+              <div class="sleep-block">
+                <h4><i class="fa-solid fa-bed"></i> Tidur Malam</h4>
+                <div class="input-row-two">
+                  <div class="input-group">
+                    <label for="nightSleepStart">Dari Jam</label>
+                    <input type="time" id="nightSleepStart" />
+                  </div>
+                  <div class="input-group">
+                    <label for="nightSleepEnd">Sampai Jam</label>
+                    <input type="time" id="nightSleepEnd" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tidur Siang -->
+              <div class="sleep-block">
+                <h4><i class="fa-solid fa-sun"></i> Tidur Siang</h4>
+                <div class="input-row-two">
+                  <div class="input-group">
+                    <label for="napStart">Dari Jam</label>
+                    <input type="time" id="napStart" />
+                  </div>
+                  <div class="input-group">
+                    <label for="napEnd">Sampai Jam</label>
+                    <input type="time" id="napEnd" />
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- CARD 4: KONSUMSI BUAH & SAYUR -->
+            <article class="tracker-card card-food">
+              <header class="card-title">
+                <i class="fa-solid fa-carrot icon-title"></i>
+                <h3>Makan Buah & Sayur</h3>
+              </header>
+              <div class="input-group">
+                <label for="fruitsVeggiesInput">Buah & Sayur yang Dikonsumsi Hari Ini</label>
+                <input type="text" id="fruitsVeggiesInput" placeholder="cth: Apel, Pisang, Bayam, Wortel..." />
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- 3. CATATAN / REFLEKSI -->
+        <section class="journal-section">
+          <label for="notes" class="section-title label-block">Jurnal & Evaluasi Diri</label>
+          <textarea id="notes" rows="4" placeholder="Tuliskan hal menarik, pencapaian, atau tantangan sehatmu hari ini..."></textarea>
+        </section>
+
+        <!-- TOMBOL SIMPAN -->
+        <div class="journal-footer">
+          <button type="submit" class="btn-primary">Simpan Catatan Harian</button>
+        </div>
+
+      </form>
+
+    </div>
+  </main>
+
+  <!-- FOOTER GLOBAL -->
+  <footer class="main-footer">
+    <nav class="footer-nav" aria-label="Navigasi Footer">
+      <ul class="footer-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="journal.html">Journal</a></li>
+        <li><a href="bmi.html">IMT</a></li>
+        <li><a href="assistant.html">AI Assistant</a></li>
+        <li><a href="plan.html">Plan</a></li>
+      </ul>
+    </nav>
+    <p class="copyright">&copy; 2026 Better Tomorrow. All rights reserved.</p>
+  </footer>
+
+  <!-- JS Eksternal -->
+  <script src="js/app.js"></script>
+  <script src="js/journal.js"></script>
+</body>
+</html>

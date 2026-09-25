@@ -1,0 +1,261 @@
+/* ==========================================
+   JOURNAL PAGE STYLES (journal.css)
+   ========================================== */
+.journal-body {
+  background: var(--color-bg-light);
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  flex: 1;
+}
+
+.journal-container {
+  width: 100%;
+  max-width: 840px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.back-link {
+  display: inline-block;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.journal-header h1 {
+  font-size: 28px;
+  color: var(--color-primary);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.journal-header p {
+  color: var(--color-text-sub);
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+.journal-section {
+  margin-bottom: 32px;
+  border: none;
+  padding: 0;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-main);
+  margin-bottom: 16px;
+  display: block;
+}
+
+/* Mood Selector */
+.mood-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 12px;
+}
+
+.mood-option input { display: none; }
+
+.mood-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: #f8fafc;
+  border: 2px solid #edf2f7;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a5568;
+  transition: all 0.2s ease;
+}
+
+.mood-box i { font-size: 22px; }
+
+.mood-option input:checked + .mood-box {
+  background: #e6f9f0;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* TRACKER GRID & CARDS */
+.tracker-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tracker-card {
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.icon-title {
+  font-size: 20px;
+  color: var(--color-primary);
+}
+
+.card-title h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.sub-counter {
+  font-size: 12px;
+  color: var(--color-text-sub);
+  font-weight: 500;
+}
+
+/* Gelas Minum Air Interaktif */
+.water-glasses-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.glass-item {
+  flex: 1;
+  text-align: center;
+  font-size: 28px;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.glass-item:hover {
+  transform: scale(1.15);
+}
+
+.glass-item.active {
+  color: #38bdf8;
+  text-shadow: 0 4px 10px rgba(56, 189, 248, 0.4);
+}
+
+/* Input Rows & Groups */
+.input-row-three {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.input-row-two {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.sleep-block {
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 12px;
+}
+
+.sleep-block:last-child {
+  margin-bottom: 0;
+}
+
+.sleep-block h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-sub);
+  margin-bottom: 6px;
+}
+
+.input-group input, 
+.journal-section textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.input-group input:focus, 
+.journal-section textarea:focus {
+  border-color: var(--color-primary);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-light);
+}
+
+.journal-footer {
+  text-align: right;
+  margin-top: 20px;
+}
+
+/* Responsif Layar HP */
+@media (max-width: 600px) {
+  .journal-container {
+    padding: 24px 18px;
+  }
+  .input-row-three, .input-row-two {
+    grid-template-columns: 1fr;
+  }
+  .water-glasses-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .journal-footer {
+    text-align: center;
+  }
+  .btn-primary {
+    width: 100%;
+  }
+}

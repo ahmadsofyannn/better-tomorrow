@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kalkulator IMT - Better Tomorrow</title>
+
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- CSS Eksternal -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/bmi.css" />
+</head>
+<body>
+
+  <!-- NAVBAR GLOBAL -->
+  <header class="main-header">
+    <nav class="navbar" aria-label="Navigasi Utama">
+      <a href="index.html" class="logo">Better Tomorrow</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="journal.html">Keseharian</a></li>
+        <li><a href="bmi.html" class="active">IMT Calculator</a></li>
+        <li><a href="assistant.html">AI Assistant</a></li>
+        <li><a href="plan.html">Health Plan</a></li>
+        <li><a href="login.html" class="nav-btn-login">Masuk</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="bmi-body">
+    <article class="bmi-card">
+      
+      <header class="bmi-header">
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
+        <h1>Kalkulator IMT</h1>
+        <p class="bmi-subtitle">Hitung Indeks Massa Tubuh untuk mengetahui status berat badan idealmu.</p>
+      </header>
+
+      <!-- FORM INPUT DATA -->
+      <form id="bmiForm" class="bmi-inputs" onsubmit="event.preventDefault();">
+        <fieldset class="input-fieldset">
+          <legend class="sr-only">Data Fisik</legend>
+          
+          <div class="input-row">
+            <div class="input-field">
+              <label for="age">Usia</label>
+              <input type="number" id="age" value="25" min="1" max="120" placeholder="Thn" />
+            </div>
+            <div class="input-field">
+              <label for="height">Tinggi Badan</label>
+              <div class="input-with-unit">
+                <input type="number" id="height" value="170" min="50" max="250" placeholder="cm" />
+                <span class="unit">cm</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-row align-center">
+            <!-- Gender Switch -->
+            <div class="gender-selector" role="group" aria-label="Jenis Kelamin">
+              <button type="button" class="gender-btn active" data-gender="female" aria-label="Perempuan" title="Perempuan">
+                <i class="fa-solid fa-person-dress"></i>
+              </button>
+              <button type="button" class="gender-btn" data-gender="male" aria-label="Laki-laki" title="Laki-laki">
+                <i class="fa-solid fa-person"></i>
+              </button>
+            </div>
+            <div class="input-field">
+              <label for="weight">Berat Badan</label>
+              <div class="input-with-unit">
+                <input type="number" id="weight" value="50" min="10" max="300" placeholder="kg" />
+                <span class="unit">kg</span>
+              </div>
+            </div>
+          </div>
+
+        </fieldset>
+      </form>
+
+      <!-- VISUAL GAUGE METER -->
+      <section class="gauge-section" aria-label="Visualisasi Meter IMT">
+        <div class="gauge-container">
+          <div class="gauge-body">
+            <div class="gauge-segment segment-under"><span>BB Kurang</span></div>
+            <div class="gauge-segment segment-normal"><span>Normal</span></div>
+            <div class="gauge-segment segment-over"><span>BB Berlebih</span></div>
+          </div>
+          <div class="gauge-needle-container">
+            <div class="gauge-needle" id="gaugeNeedle"></div>
+          </div>
+        </div>
+
+        <!-- RESULT SCORE -->
+        <div class="bmi-score-box">
+          <span class="score-label">SKOR INDEKS MASSA TUBUH (IMT)</span>
+          <h2 class="score-value" id="bmiValue">17.3</h2>
+        </div>
+      </section>
+
+      <!-- SUMMARY RESULTS -->
+      <section class="result-summary" aria-label="Ringkasan Hasil">
+        <div class="summary-col">
+          <span class="sum-title">Kategori</span>
+          <strong class="sum-value" id="categoryName">Kurang Bobot</strong>
+        </div>
+        <div class="summary-col text-right">
+          <span class="sum-title">Selisih Berat Ideal</span>
+          <strong class="sum-value" id="weightDifference">-3.4 kg</strong>
+        </div>
+      </section>
+
+      <!-- CATEGORY LIST REFERENCE -->
+      <section class="category-reference" aria-label="Tabel Acuan Standar IMT">
+        <h3 class="ref-title">Klasifikasi IMT (WHO)</h3>
+        <ul class="ref-list" id="refList">
+          <li data-cat="very-low">
+            <span>Bobot Sangat Rendah</span>
+            <span>&lt; 15.0</span>
+          </li>
+          <li data-cat="severe-under">
+            <span>Sangat Kurang Bobot</span>
+            <span>15.0 - 16.9</span>
+          </li>
+          <li data-cat="underweight" class="active">
+            <span>Kurang Bobot</span>
+            <span>17.0 - 18.4</span>
+          </li>
+          <li data-cat="normal">
+            <span>Normal (Ideal)</span>
+            <span>18.5 - 24.9</span>
+          </li>
+          <li data-cat="overweight">
+            <span>Kelebihan Bobot</span>
+            <span>25.0 - 29.9</span>
+          </li>
+          <li data-cat="obese1">
+            <span>Obesitas Kelas I</span>
+            <span>30.0 - 34.9</span>
+          </li>
+          <li data-cat="obese2">
+            <span>Obesitas Kelas II</span>
+            <span>35.0 - 39.9</span>
+          </li>
+          <li data-cat="obese3">
+            <span>Obesitas Kelas III</span>
+            <span>&ge; 40.0</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- IDEAL WEIGHT RANGE FOOTER -->
+      <footer class="normal-weight-range">
+        <span>Rentang Berat Normal:</span>
+        <strong id="normalWeightRange">53.4 - 72.1 kg</strong>
+      </footer>
+
+    </article>
+  </main>
+
+  <!-- FOOTER GLOBAL -->
+  <footer class="main-footer">
+    <nav class="footer-nav" aria-label="Navigasi Footer">
+      <ul class="footer-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="journal.html">Journal</a></li>
+        <li><a href="bmi.html">IMT</a></li>
+        <li><a href="assistant.html">AI Assistant</a></li>
+        <li><a href="plan.html">Plan</a></li>
+      </ul>
+    </nav>
+    <p class="copyright">&copy; 2026 Better Tomorrow. All rights reserved.</p>
+  </footer>
+
+  <!-- JS Eksternal -->
+  <script src="js/app.js"></script>
+  <script src="js/bmi.js"></script>
+</body>
+</html>

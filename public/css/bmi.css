@@ -1,0 +1,306 @@
+/* ==========================================
+   KALKULATOR IMT STYLES (bmi.css)
+   ========================================== */
+.bmi-body {
+  background: var(--color-bg-light);
+  padding: 40px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 140px);
+}
+
+.bmi-card {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.back-link {
+  display: inline-block;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.bmi-header h1 {
+  font-size: 22px;
+  color: var(--color-text-main);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.bmi-subtitle {
+  font-size: 13px;
+  color: var(--color-text-sub);
+  margin-bottom: 24px;
+}
+
+/* Input Form & Fieldset */
+.bmi-inputs {
+  margin-bottom: 24px;
+}
+
+.input-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.input-row {
+  display: flex;
+  gap: 16px;
+}
+
+.input-row.align-center {
+  align-items: flex-end;
+}
+
+.input-field {
+  flex: 1;
+}
+
+.input-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-sub);
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.input-field input {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #e2e8f0;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-main);
+  padding: 6px 0;
+  outline: none;
+  background: transparent;
+  transition: border-color 0.2s ease;
+}
+
+.input-field input:focus {
+  border-bottom-color: var(--color-primary);
+}
+
+.input-with-unit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.input-with-unit .unit {
+  font-size: 13px;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* Gender Selector Buttons */
+.gender-selector {
+  display: flex;
+  gap: 8px;
+}
+
+.gender-btn {
+  background: #f1f5f9;
+  border: 2px solid transparent;
+  width: 44px;
+  height: 42px;
+  border-radius: 10px;
+  font-size: 18px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gender-btn:hover {
+  background: #e2e8f0;
+}
+
+.gender-btn.active {
+  background: #e6f9f0;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Gauge Semi-Circle Meter */
+.gauge-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-top: 8px;
+}
+
+.gauge-container {
+  position: relative;
+  width: 240px;
+  height: 120px;
+  overflow: hidden;
+}
+
+.gauge-body {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #38bdf8 0deg 60deg,      /* Underweight Blue */
+    #22c55e 60deg 120deg,    /* Normal Green */
+    #ef4444 120deg 180deg    /* Overweight Red */
+  );
+  mask: radial-gradient(transparent 56%, #000 57%);
+  -webkit-mask: radial-gradient(transparent 56%, #000 57%);
+}
+
+.gauge-needle-container {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+}
+
+.gauge-needle {
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 70px solid #0f172a;
+  position: absolute;
+  bottom: 0;
+  left: -7px;
+  transform-origin: bottom center;
+  transform: rotate(-80deg);
+  transition: transform 0.4s ease-out;
+}
+
+.bmi-score-box {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.score-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--color-text-sub);
+  display: block;
+}
+
+.score-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+/* Summary Box */
+.result-summary {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 12px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #edf2f7;
+  margin-bottom: 20px;
+}
+
+.sum-title {
+  font-size: 11px;
+  color: var(--color-text-sub);
+  display: block;
+  margin-bottom: 2px;
+  font-weight: 500;
+}
+
+.sum-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Reference List */
+.category-reference {
+  margin-bottom: 20px;
+}
+
+.ref-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-sub);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ref-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ref-list li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #64748b;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.ref-list li.active {
+  color: var(--color-primary);
+  font-weight: 700;
+  background: #e6f9f0;
+}
+
+/* Ideal Range Footer */
+.normal-weight-range {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--color-text-main);
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.normal-weight-range strong {
+  color: var(--color-primary);
+}

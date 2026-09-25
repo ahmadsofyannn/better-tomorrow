@@ -8,12 +8,14 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "dotenv": "^18.0.3",
-    "express": "^4.18.2",
-    "express-session": "^1.17.3",
-    "mongoose": "^8.24.4"
+    "express": "^4.22.3",
+    "express-session": "^1.19.0",
+    "mongoose": "^8.24.4",
+    "nodemailer": "^10.0.10"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
