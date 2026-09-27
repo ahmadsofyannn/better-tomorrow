@@ -8,10 +8,10 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-// Model User (diambil dari file terpisah atau di-import)
+// Model User
 const User = require('./models/user');
 
-// Inisialisasi Transporter Nodemailer (Ethereal / Custom)
+// Inisialisasi Transporter Nodemailer
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.ethereal.email',
   port: process.env.EMAIL_PORT || 587,
@@ -30,7 +30,6 @@ const PORT = process.env.PORT || 3000;
 // Middleware Global
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Konfigurasi Sesi Login (Session)
 app.use(session({
@@ -40,6 +39,30 @@ app.use(session({
     cookie: { maxAge: 24 * 60 * 60 * 1000 } // Sesi berlaku 1 hari
 }));
 
+// =============================================================
+// ROUTING HALAMAN PERTAMA (LOGIN AS DEFAULT) & PROTEKSI FILE
+// =============================================================
+
+// Route Utama (http://localhost:3000/) -> Langsung Buka Login
+app.get('/', (req, res) => {
+  if (req.session.userId) {
+    return res.redirect('/index.html'); // Jika sudah login, langsung ke Dashboard
+  }
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+// Middleware Proteksi Halaman HTML Internal
+const protectedPages = ['/index.html', '/journal.html', '/plan.html', '/assistant.html', '/bmi.html'];
+app.use((req, res, next) => {
+  if (protectedPages.includes(req.path) && !req.session.userId) {
+    return res.redirect('/login.html');
+  }
+  next();
+});
+
+// Serving Static Files (CSS, JS, Images, & Public HTMLs)
+app.use(express.static(path.join(__dirname, 'public')));
+
 // 1. Koneksi Database MongoDB
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/better_tomorrow';
 mongoose.connect(MONGO_URI)
@@ -47,8 +70,6 @@ mongoose.connect(MONGO_URI)
     .catch(err => console.error('❌ Gagal Koneksi DB:', err));
 
 // 2. Mongoose Schemas & Models
-
-// Schema Catatan Kesehatan (Tergantung ke userId)
 const HealthDaySchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     dayNumber: { type: Number, required: true },
@@ -66,11 +87,10 @@ const HealthDaySchema = new mongoose.Schema({
     notes: { type: String, default: '' }
 }, { timestamps: true });
 
-// Kombinasi userId + dayNumber unik per user
 HealthDaySchema.index({ userId: 1, dayNumber: 1 }, { unique: true });
 const HealthDay = mongoose.model('HealthDay', HealthDaySchema);
 
-// Middleware Proteksi Rute (Harus Login)
+// Middleware Proteksi API (Harus Login)
 const requireAuth = (req, res, next) => {
     if (!req.session.userId) {
         return res.status(401).json({ error: 'Akses ditolak. Silakan login terlebih dahulu.' });
@@ -211,7 +231,7 @@ app.post('/api/reset-password', async (req, res) => {
 // B. AI INTEGRATION (GEMINI API ASSISTANT & PLAN GENERATOR)
 // =============================================================
 
-// Endpoint Chat AI Assistant (Dipakai oleh assistant.js)
+// Endpoint Chat AI Assistant
 app.post('/api/chat', async (req, res) => {
   try {
     const { message } = req.body;
@@ -236,7 +256,7 @@ Jawablah pertanyaan/keluhan pengguna berikut dengan bahasa Indonesia yang santun
   }
 });
 
-// Endpoint Smart Health Plan Generator (Dipakai oleh plan.js)
+// Endpoint Smart Health Plan Generator
 app.post('/api/generate-plan', async (req, res) => {
   try {
     const { goal, activity, diet } = req.body;
@@ -278,7 +298,6 @@ Berikan output HANYA dalam format JSON murni dengan struktur persis seperti ini:
 // C. DATA KESEHATAN JOURNAL (DIPROTEKSI REQUIREAUTH)
 // =============================================================
 
-// GET: Ambil Semua Hari Milik User
 app.get('/api/health', requireAuth, async (req, res) => {
     try {
         const days = await HealthDay.find({ userId: req.session.userId }).sort({ dayNumber: 1 });
@@ -288,7 +307,6 @@ app.get('/api/health', requireAuth, async (req, res) => {
     }
 });
 
-// GET: Ambil Detail 1 Hari
 app.get('/api/health/:dayNumber', requireAuth, async (req, res) => {
     try {
         const day = await HealthDay.findOne({ userId: req.session.userId, dayNumber: req.params.dayNumber });
@@ -299,7 +317,6 @@ app.get('/api/health/:dayNumber', requireAuth, async (req, res) => {
     }
 });
 
-// POST: Tambah Hari Baru
 app.post('/api/health', requireAuth, async (req, res) => {
     try {
         const newDay = new HealthDay({
@@ -313,7 +330,6 @@ app.post('/api/health', requireAuth, async (req, res) => {
     }
 });
 
-// PUT: Update Data Hari
 app.put('/api/health/:dayNumber', requireAuth, async (req, res) => {
     try {
         const updated = await HealthDay.findOneAndUpdate(
@@ -327,9 +343,13 @@ app.put('/api/health/:dayNumber', requireAuth, async (req, res) => {
     }
 });
 
-// Fallback Route untuk Single Page App / Direct Navigation
+// Fallback Route jika endpoint/page tidak ditemukan
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  if (req.session.userId) {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  } else {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  }
 });
 
 // Start Server

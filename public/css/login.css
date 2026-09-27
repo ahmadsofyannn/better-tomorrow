@@ -1,179 +1,177 @@
-/* Layout Kontainer Utama Login */
-.auth-body {
-  background-color: var(--color-bg-light, #f8fafc);
+/* ==========================================================================
+   BAB 1: VARIABLE & RESET UNIVERSAL
+   ========================================================================== */
+:root {
+  --color-bg-gradient-1: #b7d251; /* Lime Green Palette */
+  --color-bg-gradient-2: #80d152; /* Green Palette */
+  --color-card-bg: rgba(228, 237, 172, 0.92); /* Kartu Form Glass */
+  --color-card-dark: #12210e;     /* Tombol & Aksen Gelap */
+  --color-text-main: #1d3316;     /* Warna Teks & Underline */
+  --color-text-placeholder: rgba(29, 51, 22, 0.55);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body.auth-body {
   min-height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 20px;
+  align-items: center;
+  padding: 2rem 1rem;
+  overflow-x: hidden;
+  background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), 
+              url('../images/bg.jpg') no-repeat center center / cover;
 }
 
-.auth-container {
+/* ==========================================================================
+   BAB 2: CONTAINER UTAMA (CENTERED)
+   ========================================================================== */
+.auth-wrapper {
+  position: relative;
   width: 100%;
-  max-width: 960px;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  overflow: hidden;
+  max-width: 440px; /* Ukuran ideal kartu tengah yang pas & kompak */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
 }
 
-/* Kolom Kiri - Form */
+/* ==========================================================================
+   BAB 3: KARTU FORM GLASSMORPHISM (SIMETRIS DI TENGAH)
+   ========================================================================== */
 .auth-card-form {
-  padding: 48px;
+  background: var(--color-card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 32px;
+  width: 100%;
+  padding: 3rem 2.5rem; /* Padding seimbang di kiri & kanan */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 .auth-header {
-  margin-bottom: 28px;
-}
-
-.auth-logo {
-  font-size: 32px;
-  color: var(--color-primary, #10b981);
-  display: inline-block;
-  margin-bottom: 12px;
+  margin-bottom: 2rem;
+  text-align: center;
+  width: 100%;
 }
 
 .auth-header h1 {
-  font-size: 24px;
+  font-size: 2.2rem;
   font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 8px;
-}
-
-.auth-header p {
-  font-size: 14px;
-  color: #64748b;
-  line-height: 1.5;
+  color: var(--color-text-main);
+  letter-spacing: -0.5px;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-group label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #334155;
-}
-
-.form-group input {
+  gap: 1.5rem;
   width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s;
 }
 
-.form-group input:focus {
-  border-color: var(--color-primary, #10b981);
-}
-
-.password-wrapper {
+/* Underline Input Minimalis */
+.form-group-line {
   position: relative;
   display: flex;
   align-items: center;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 14px;
-  color: #94a3b8;
-  cursor: pointer;
-  padding: 4px;
-}
-
-.toggle-password:hover {
-  color: #475569;
-}
-
-.form-options {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.forgot-link {
-  font-size: 13px;
-  color: var(--color-primary, #10b981);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.auth-footer-text {
-  margin-top: 24px;
-  text-align: center;
-  font-size: 14px;
-  color: #64748b;
-}
-
-.auth-footer-text a {
-  color: var(--color-primary, #10b981);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-/* Kolom Kanan - Banner Visual */
-.auth-card-banner {
-  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-  color: #ffffff;
-  padding: 48px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: relative;
-  overflow: hidden;
-}
-
-.banner-content h2 {
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.banner-content p {
-  font-size: 14px;
-  opacity: 0.9;
-  line-height: 1.6;
-}
-
-.banner-image-wrapper {
-  margin-top: 24px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-
-.banner-img {
+  border-bottom: 1.5px solid var(--color-text-main);
+  padding-bottom: 0.25rem;
   width: 100%;
-  height: 240px;
-  object-fit: cover;
-  display: block;
 }
 
-/* Responsif Layar HP/Tablet */
-@media (max-width: 768px) {
-  .auth-container {
-    grid-template-columns: 1fr;
-  }
-  .auth-card-banner {
-    display: none; /* Sembunyikan banner visual saat dibuka di layar HP */
-  }
+.form-group-line input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0.5rem 2rem 0.5rem 0.2rem;
+  font-size: 0.95rem;
+  color: var(--color-text-main);
+  font-weight: 500;
+}
+
+.form-group-line input::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+.form-group-line .input-icon {
+  position: absolute;
+  right: 0.3rem;
+  color: var(--color-text-main);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Tombol Submit Full-Pill */
+.btn-submit {
+  width: 100%;
+  padding: 0.85rem;
+  border: none;
+  border-radius: 30px;
+  background-color: var(--color-card-dark);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.8rem;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s ease;
+}
+
+.btn-submit:hover {
+  opacity: 0.92;
+  transform: translateY(-2px);
+}
+
+.auth-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-main);
+  width: 100%;
+}
+
+.auth-links a {
+  color: var(--color-text-main);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   BAB 4: GAYA SPESIFIK FORGOT PASSWORD
+   ========================================================================== */
+.auth-wrapper:has(#forgotPasswordForm) .auth-header h1 {
+  font-size: 1.8rem;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   BAB 5: RESPONSIVE DISPLAY (MOBILE)
+   ========================================================================== */
+@media (max-width: 480px) {
   .auth-card-form {
-    padding: 28px 20px;
+    padding: 2.2rem 1.6rem;
+    border-radius: 24px;
+  }
+
+  .auth-header h1 {
+    font-size: 1.8rem;
+    white-space: normal;
   }
 }

@@ -1,182 +1,256 @@
-/* ==========================================
-   JOURNAL PAGE STYLES (journal.css)
-   ========================================== */
+/* --- MAIN LAYOUT & CONTAINER --- */
 .journal-body {
-  background: var(--color-bg-light);
-  padding: 40px 20px;
-  display: flex;
-  justify-content: center;
-  flex: 1;
+  padding: 2.5rem 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .journal-container {
-  width: 100%;
-  max-width: 840px;
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  background-color: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* --- HEADER JOURNAL --- */
+.journal-header {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #F1F5F9;
+  padding-bottom: 1.5rem;
 }
 
 .back-link {
-  display: inline-block;
-  color: var(--color-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-blue);
   text-decoration: none;
-  font-size: 14px;
   font-weight: 600;
-  margin-bottom: 20px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease;
 }
 
 .back-link:hover {
-  text-decoration: underline;
+  transform: translateX(-4px);
 }
 
 .journal-header h1 {
-  font-size: 28px;
-  color: var(--color-primary);
-  font-weight: 700;
-  margin-bottom: 6px;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 0.4rem;
 }
 
 .journal-header p {
-  color: var(--color-text-sub);
-  font-size: 14px;
-  margin-bottom: 30px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
 }
 
+/* --- SECTION STYLING --- */
 .journal-section {
-  margin-bottom: 32px;
   border: none;
+  margin-bottom: 2.2rem;
   padding: 0;
 }
 
 .section-title {
-  font-size: 16px;
+  font-size: 1.1rem;
   font-weight: 700;
-  color: var(--color-text-main);
-  margin-bottom: 16px;
+  color: var(--text-dark);
+  margin-bottom: 1.2rem;
   display: block;
 }
 
-/* Mood Selector */
+/* --- 1. MOOD SELECTOR --- */
 .mood-selector {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1rem;
 }
 
-.mood-option input { display: none; }
+.mood-option {
+  cursor: pointer;
+}
+
+.mood-option input[type="radio"] {
+  display: none;
+}
 
 .mood-box {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 16px;
-  background: #f8fafc;
-  border: 2px solid #edf2f7;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 13px;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1rem;
+  background-color: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: var(--radius-lg);
   font-weight: 600;
-  color: #4a5568;
-  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  transition: all 0.25s ease;
 }
 
-.mood-box i { font-size: 22px; }
-
-.mood-option input:checked + .mood-box {
-  background: #e6f9f0;
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+.mood-box i {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  transition: color 0.25s ease;
 }
 
-/* TRACKER GRID & CARDS */
+.mood-option:hover .mood-box {
+  background-color: #F0F7FF;
+  border-color: var(--primary-cyan);
+}
+
+/* Active Radio State */
+.mood-option input[type="radio"]:checked + .mood-box {
+  background: linear-gradient(135deg, #29B6F6 0%, #0088FF 100%);
+  color: var(--white);
+  border-color: var(--primary-blue);
+  box-shadow: 0px 4px 12px rgba(0, 136, 255, 0.25);
+}
+
+.mood-option input[type="radio"]:checked + .mood-box i {
+  color: var(--white);
+}
+
+/* --- 2. TRACKER CARDS GRID --- */
 .tracker-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
 }
 
 .tracker-card {
-  background: #f8fafc;
-  border: 1px solid #edf2f7;
-  border-radius: 16px;
-  padding: 20px;
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  transition: border-color 0.2s ease;
+}
+
+.tracker-card:hover {
+  border-color: rgba(41, 182, 246, 0.5);
 }
 
 .card-title {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
 }
 
 .icon-title {
-  font-size: 20px;
-  color: var(--color-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
 }
 
 .card-title h3 {
-  font-size: 15px;
+  font-size: 1rem;
   font-weight: 700;
-  color: var(--color-text-main);
+  color: var(--text-dark);
 }
 
 .sub-counter {
-  font-size: 12px;
-  color: var(--color-text-sub);
+  font-size: 0.82rem;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
-/* Gelas Minum Air Interaktif */
+/* WARNA IKON BERDASARKAN KARTU */
+.card-water .icon-title { background-color: #E0F7FA; color: #00ACC1; }
+.card-workout .icon-title { background-color: #FFEBEE; color: #E53935; }
+.card-sleep .icon-title { background-color: #EDE7F6; color: #5E35B1; }
+.card-food .icon-title { background-color: #E8F5E9; color: #43A047; }
+
+/* WATER GLASSES INTERACTION */
 .water-glasses-container {
   display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  background: #ffffff;
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  gap: 0.6rem;
+  flex-wrap: wrap;
 }
 
 .glass-item {
-  flex: 1;
-  text-align: center;
-  font-size: 28px;
-  color: #cbd5e1;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background-color: var(--white);
+  border: 1.5px solid #CBD5E1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94A3B8;
   cursor: pointer;
+  font-size: 1.1rem;
   transition: all 0.2s ease;
 }
 
 .glass-item:hover {
-  transform: scale(1.15);
+  border-color: #00ACC1;
+  color: #00ACC1;
 }
 
 .glass-item.active {
-  color: #38bdf8;
-  text-shadow: 0 4px 10px rgba(56, 189, 248, 0.4);
+  background-color: #00ACC1;
+  border-color: #00ACC1;
+  color: var(--white);
+  box-shadow: 0px 4px 10px rgba(0, 172, 193, 0.3);
 }
 
-/* Input Rows & Groups */
+/* INPUT FORM GENERAL STYLING */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.input-group input,
+textarea#notes {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 10px;
+  background-color: var(--white);
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input-group input:focus,
+textarea#notes:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(0, 136, 255, 0.12);
+}
+
 .input-row-three {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 1rem;
 }
 
 .input-row-two {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 1rem;
 }
 
 .sleep-block {
-  background: #ffffff;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  margin-bottom: 12px;
+  margin-bottom: 1rem;
 }
 
 .sleep-block:last-child {
@@ -184,77 +258,56 @@
 }
 
 .sleep-block h4 {
-  font-size: 13px;
+  font-size: 0.88rem;
   font-weight: 600;
-  color: #4a5568;
-  margin-bottom: 10px;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.4rem;
 }
 
-.input-group label {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-text-sub);
-  margin-bottom: 6px;
+textarea#notes {
+  resize: vertical;
+  min-height: 110px;
 }
 
-.input-group input, 
-.journal-section textarea {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 14px;
-  background: #ffffff;
-  outline: none;
-  transition: border-color 0.2s ease;
-}
-
-.input-group input:focus, 
-.journal-section textarea:focus {
-  border-color: var(--color-primary);
+/* --- FOOTER BUTTON --- */
+.journal-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }
 
 .btn-primary {
-  background-color: var(--color-primary);
-  color: #ffffff;
+  background: linear-gradient(135deg, #29B6F6 0%, #0088FF 100%);
+  color: var(--white);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.85rem 2rem;
   border: none;
-  padding: 12px 28px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  box-shadow: 0px 4px 15px rgba(0, 136, 255, 0.3);
+  transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
-  background-color: var(--color-primary-light);
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 20px rgba(0, 136, 255, 0.4);
 }
 
-.journal-footer {
-  text-align: right;
-  margin-top: 20px;
-}
-
-/* Responsif Layar HP */
-@media (max-width: 600px) {
+/* --- RESPONSIVE MOBILE --- */
+@media (max-width: 640px) {
   .journal-container {
-    padding: 24px 18px;
+    padding: 1.5rem;
   }
-  .input-row-three, .input-row-two {
+
+  .input-row-three,
+  .input-row-two {
     grid-template-columns: 1fr;
   }
-  .water-glasses-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-  }
-  .journal-footer {
-    text-align: center;
-  }
+
   .btn-primary {
     width: 100%;
   }

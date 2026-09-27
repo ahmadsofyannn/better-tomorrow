@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const loginForm = document.getElementById('loginForm');
+  const signupForm = document.getElementById('signupForm');
   const togglePassword = document.getElementById('togglePassword');
   const passwordInput = document.getElementById('password');
 
@@ -8,10 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     togglePassword.addEventListener('click', () => {
       const isPassword = passwordInput.getAttribute('type') === 'password';
       
-      // Ubah tipe input
       passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
       
-      // Toggle class Font Awesome untuk ikon gembok / mata
       if (togglePassword.classList.contains('fa-lock')) {
         togglePassword.classList.remove('fa-lock');
         togglePassword.classList.add('fa-lock-open');
@@ -25,46 +23,56 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 2. Submit Form Login ke API Backend Express.js
-  if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
+  // 2. Submit Form Signup ke API Backend Express.js
+  if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const submitBtn = loginForm.querySelector('.btn-submit');
+      const submitBtn = signupForm.querySelector('.btn-submit');
+      const fullNameInput = document.getElementById('fullName');
       const emailInput = document.getElementById('email');
-      
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+
+      const fullName = fullNameInput ? fullNameInput.value.trim() : '';
       const email = emailInput ? emailInput.value.trim() : '';
       const password = passwordInput ? passwordInput.value : '';
 
+      // Validasi Konfirmasi Password jika elemennya tersedia di HTML
+      if (confirmPasswordInput) {
+        const confirmPassword = confirmPasswordInput.value;
+        if (password !== confirmPassword) {
+          alert('Kata sandi dan konfirmasi kata sandi tidak cocok!');
+          return;
+        }
+      }
+
       // Set Loading State pada Tombol
-      const originalBtnText = submitBtn ? submitBtn.innerText : 'Login';
+      const originalBtnText = submitBtn ? submitBtn.innerText : 'Sign up';
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.innerText = 'Memproses...';
       }
 
       try {
-        const response = await fetch('/api/login', {
+        const response = await fetch('/api/signup', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ fullName, email, password }),
         });
 
         const data = await response.json();
 
         if (response.ok) {
-          // Simpan token/data user ke localStorage
-          if (data.token) localStorage.setItem('userToken', data.token);
-          if (data.user) localStorage.setItem('userData', JSON.stringify(data.user));
-          
-          alert('Login Berhasil!');
-          window.location.href = 'index.html'; // Pindah ke Dashboard Utama
+          alert('Pendaftaran berhasil! Silakan login.');
+          window.location.href = 'login.html';
         } else {
-          alert(data.message || 'Login gagal, periksa email dan password!');
+          alert(data.message || 'Gagal mendaftar. Silakan coba lagi.');
         }
       } catch (error) {
-        console.error('Error Login:', error);
-        alert('Gagal terhubung ke server backend.');
+        console.error('Error Register:', error);
+        alert('Terjadi kesalahan pada server.');
       } finally {
         // Kembalikan status tombol
         if (submitBtn) {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - Better Tomorrow</title>
+  <title>Forgot Password - Better Tomorrow</title>
 
   <!-- Typography & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,45 +18,32 @@
   <main class="auth-wrapper">
     
     <!-- KOLOM KIRI: BANNER VISUAL DENGAN GAMBAR OLAHRAGA -->
-    
+  
 
-    <!-- KOLOM KANAN: FORM LOGIN -->
+    <!-- KOLOM KANAN: FORM FORGOT PASSWORD -->
     <section class="auth-card-form form-right">
       <header class="auth-header">
-        <h1>Login</h1>
+        <h1>Forgot Password</h1>
       </header>
 
-      <form id="loginForm" class="auth-form" action="/api/login" method="POST">
+      <form id="forgotPasswordForm" class="auth-form" action="/api/forgot-password" method="POST">
         <div class="form-group-line">
           <input 
             type="email" 
             id="email" 
             name="email" 
-            placeholder="Email" 
+            placeholder="Enter your registered email" 
             required 
             autocomplete="email" 
           />
           <i class="fa-regular fa-envelope input-icon" aria-hidden="true"></i>
         </div>
 
-        <div class="form-group-line">
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            placeholder="Password" 
-            required 
-            autocomplete="current-password" 
-          />
-          <i class="fa-solid fa-lock input-icon toggle-password" id="togglePassword" title="Lihat Password" aria-hidden="true"></i>
-        </div>
-
-        <button type="submit" class="btn-submit">Login</button>
+        <button type="submit" class="btn-submit">Send Reset Link</button>
       </form>
 
-      <footer class="auth-links">
-        <a href="register.html">Create an account</a>
-        <a href="forgotpw.html">Forgot password?</a>
+      <footer class="auth-links" style="justify-content: center;">
+        <a href="login.html">Back to Login</a>
       </footer>
     </section>
 
@@ -64,7 +51,7 @@
 
   <!-- Global & Page JavaScript -->
   <script src="js/app.js"></script>
-  <script src="js/login.js"></script>
+  <script src="js/forgotpw.js"></script>
   
 </body>
 </html>
