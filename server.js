@@ -9,22 +9,15 @@ const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // 1. Inisialisasi Express & Port
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 2. Inisialisasi Transporter Nodemailer
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'smtp.ethereal.email',
-  port: process.env.EMAIL_PORT || 587,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
+// 2. Inisialisasi SDK Resend (Service Email Developer)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // 3. Inisialisasi Gemini AI SDK
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
@@ -76,7 +69,7 @@ mongoose.connect(MONGO_URI)
     .then(() => console.log('✅ Terhubung ke MongoDB Database'))
     .catch(err => console.error('❌ Gagal Koneksi DB:', err));
 
-// Model User (Gunakan import jika dari file eksternal, atau definisikan dengan aman)
+// Model User
 let User;
 try {
     User = require('./models/user');
@@ -156,7 +149,6 @@ app.post('/api/auth/register', async (req, res) => {
 // Handler fungsi login
 const handleLogin = async (req, res) => {
     try {
-        // Ambil input dari req.body (bisa dikirim sebagai 'username', 'email', atau 'loginInput')
         const loginInput = req.body.username || req.body.email || req.body.loginInput;
         const password = req.body.password;
 
@@ -164,7 +156,6 @@ const handleLogin = async (req, res) => {
             return res.status(400).json({ error: 'Username/Email dan Password wajib diisi' });
         }
 
-        // Cari user di database yang match dengan Username ATAU Email
         const user = await User.findOne({
             $or: [
                 { username: loginInput },
@@ -176,13 +167,11 @@ const handleLogin = async (req, res) => {
             return res.status(400).json({ error: 'Username/Email atau Password salah' });
         }
 
-        // Bandingkan password yang diinput dengan password terenkripsi di DB
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ error: 'Username/Email atau Password salah' });
         }
 
-        // Simpan data sesi login
         req.session.userId = user._id;
         req.session.username = user.username;
 
@@ -194,7 +183,6 @@ const handleLogin = async (req, res) => {
     }
 };
 
-// Menerima dua route (dengan/tanpa /auth/) agar kompatibel dengan frontend
 app.post('/api/login', handleLogin);
 app.post('/api/auth/login', handleLogin);
 
@@ -216,11 +204,15 @@ app.get('/api/auth/me', (req, res) => {
     }
 });
 
-// Endpoint Minta Kode OTP Lupa Password
+// Endpoint Minta Kode OTP Lupa Password (via Resend)
 app.post('/api/forgot-password', async (req, res) => {
   const { email } = req.body;
 
   try {
+    if (!email) {
+      return res.status(400).json({ message: 'Email wajib diisi' });
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: 'Email tidak ditemukan' });
@@ -229,22 +221,35 @@ app.post('/api/forgot-password', async (req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     user.resetPasswordOTP = otp;
-    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
+    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // Berlaku 10 menit
     await user.save();
 
-    const mailOptions = {
-      from: `"Better Tomorrow Support" <${process.env.EMAIL_USER}>`,
-      to: user.email,
+    const { data, error } = await resend.emails.send({
+      from: 'Better Tomorrow <onboarding@resend.dev>',
+      to: [user.email],
       subject: 'Kode Verifikasi Lupa Password',
-      text: `Kode OTP pemulihan password Anda adalah: ${otp}. Berlaku selama 10 menit.`
-    };
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; max-width: 500px;">
+          <h2 style="color: #333;">Pemulihan Kata Sandi</h2>
+          <p>Halo <b>${user.username}</b>,</p>
+          <p>Kode OTP pemulihan password Anda adalah:</p>
+          <h1 style="background: #f4f4f4; padding: 12px 24px; display: inline-block; color: #4F46E5; letter-spacing: 6px; border-radius: 6px;">${otp}</h1>
+          <p>Kode ini berlaku selama <b>10 menit</b>. Jangan berikan kode ini kepada siapa pun.</p>
+        </div>
+      `
+    });
 
-    await transporter.sendMail(mailOptions);
+    if (error) {
+      console.error('❌ Error Resend API:', error);
+      return res.status(500).json({ message: 'Gagal mengirim email verifikasi.' });
+    }
+
+    console.log(`✉️ OTP berhasil dikirim via Resend ke: ${user.email}`);
     res.json({ message: 'Kode OTP berhasil dikirim ke email.' });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Gagal mengirim email verifikasi.' });
+    console.error('❌ Error /api/forgot-password:', error);
+    res.status(500).json({ message: 'Gagal memproses permintaan reset password.' });
   }
 });
 
@@ -253,6 +258,10 @@ app.post('/api/reset-password', async (req, res) => {
   const { email, otp, newPassword } = req.body;
 
   try {
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ message: 'Email, OTP, dan Password Baru wajib diisi' });
+    }
+
     const user = await User.findOne({
       email,
       resetPasswordOTP: otp,
@@ -270,10 +279,11 @@ app.post('/api/reset-password', async (req, res) => {
     user.resetPasswordExpires = null;
     await user.save();
 
-    res.json({ message: 'Password berhasil diperbarui!' });
+    console.log(`✅ Password user ${user.username} berhasil diperbarui.`);
+    res.json({ message: 'Password berhasil diperbarui! Silakan login kembali.' });
 
   } catch (error) {
-    console.error(error);
+    console.error('❌ Error /api/reset-password:', error);
     res.status(500).json({ message: 'Gagal memperbarui password.' });
   }
 });
@@ -288,22 +298,55 @@ app.post('/api/chat', async (req, res) => {
     const { message } = req.body;
 
     if (!message) {
-      return res.status(400).json({ error: 'Pesan tidak boleh kosong.' });
+      return res.status(400).json({ error: 'Pesan tidak boleh kosong' });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    
-    const prompt = `Anda adalah 'Better Tomorrow AI', asisten kesehatan personal yang ramah, suportif, dan informatif.
-Jawablah pertanyaan/keluhan pengguna berikut dengan bahasa Indonesia yang santun, empatik, dan praktis:
-"${message}"`;
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ error: 'API Key Gemini belum terkonfigurasi di server.' });
+    }
 
-    const result = await model.generateContent(prompt);
-    const responseText = result.response.text();
+    // Menggunakan model gemini-3.8-flash sesuai instruksi terbaru Google
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `Kamu adalah Asisten Kesehatan ramah untuk aplikasi 'Better Tomorrow'. Jawablah secara singkat, padat, dan bermanfaat: ${message}`,
+                },
+              ],
+            },
+          ],
+        }),
+      }
+    );
 
-    return res.json({ reply: responseText });
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Error Response dari Google Gemini:', data);
+      return res.status(response.status).json({
+        error: data.error?.message || 'Gagal memproses permintaan AI Assistant.',
+      });
+    }
+
+    const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!responseText) {
+      return res.status(500).json({ error: 'Format respon AI tidak sesuai.' });
+    }
+
+    res.json({ reply: responseText });
   } catch (error) {
-    console.error('Error /api/chat:', error);
-    return res.status(500).json({ error: 'Gagal memproses permintaan AI Assistant.' });
+    console.error('Error Gemini API:', error);
+    res.status(500).json({ error: 'Gagal memproses permintaan AI Assistant.' });
   }
 });
 
