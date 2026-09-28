@@ -54,15 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
-        const response = await fetch('/api/signup', {
+       const response = await fetch('/api/auth/register', { // <-- Ganti URL ke /api/auth/register
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ fullName, email, password }),
-        });
+          body: JSON.stringify({ username: fullName, email, password }), // <-- Ganti fullName jadi username
+       });
 
-        const data = await response.json();
+       const data = await response.json();
 
         if (response.ok) {
           alert('Pendaftaran berhasil! Silakan login.');

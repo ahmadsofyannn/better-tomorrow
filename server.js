@@ -1,4 +1,8 @@
 require('dotenv').config();
+
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -8,10 +12,11 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-// Model User
-const User = require('./models/user');
+// 1. Inisialisasi Express & Port
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-// Inisialisasi Transporter Nodemailer
+// 2. Inisialisasi Transporter Nodemailer
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.ethereal.email',
   port: process.env.EMAIL_PORT || 587,
@@ -21,11 +26,8 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Inisialisasi Gemini AI SDK
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-const app = express();
-const PORT = process.env.PORT || 3000;
+// 3. Inisialisasi Gemini AI SDK
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 // Middleware Global
 app.use(cors());
@@ -63,13 +65,35 @@ app.use((req, res, next) => {
 // Serving Static Files (CSS, JS, Images, & Public HTMLs)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 1. Koneksi Database MongoDB
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/better_tomorrow';
+// =============================================================
+// KONEKSI DATABASE & MONGOOSE SCHEMAS
+// =============================================================
+
+// String Koneksi MongoDB Atlas
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://admin:mongomongoliadb@admin.2brzuxo.mongodb.net/better_tomorrow?retryWrites=true&w=majority';
+
 mongoose.connect(MONGO_URI)
     .then(() => console.log('✅ Terhubung ke MongoDB Database'))
     .catch(err => console.error('❌ Gagal Koneksi DB:', err));
 
-// 2. Mongoose Schemas & Models
+// Model User (Gunakan import jika dari file eksternal, atau definisikan dengan aman)
+let User;
+try {
+    User = require('./models/user');
+} catch (e) {
+    const UserSchema = new mongoose.Schema({
+        username: { type: String, required: true, unique: true },
+        email:    { type: String, required: true, unique: true },
+        password: { type: String, required: true },
+        role:     { type: String, default: 'user' },
+        resetPasswordOTP: { type: String, default: null },
+        resetPasswordExpires: { type: Date, default: null }
+    }, { timestamps: true });
+
+    User = mongoose.models.User || mongoose.model('User', UserSchema);
+}
+
+// Schema HealthDay / Journal
 const HealthDaySchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     dayNumber: { type: Number, required: true },
@@ -88,11 +112,11 @@ const HealthDaySchema = new mongoose.Schema({
 }, { timestamps: true });
 
 HealthDaySchema.index({ userId: 1, dayNumber: 1 }, { unique: true });
-const HealthDay = mongoose.model('HealthDay', HealthDaySchema);
+const HealthDay = mongoose.models.HealthDay || mongoose.model('HealthDay', HealthDaySchema);
 
 // Middleware Proteksi API (Harus Login)
 const requireAuth = (req, res, next) => {
-    if (!req.session.userId) {
+    if (!req.session || !req.session.userId) {
         return res.status(401).json({ error: 'Akses ditolak. Silakan login terlebih dahulu.' });
     }
     next();
@@ -124,28 +148,55 @@ app.post('/api/auth/register', async (req, res) => {
 
         res.status(201).json({ message: 'Registrasi berhasil', username: newUser.username });
     } catch (err) {
+        console.error("❌ Detail Error Registrasi:", err);
         res.status(500).json({ error: err.message });
     }
 });
 
-// Login User
-app.post('/api/auth/login', async (req, res) => {
+// Handler fungsi login
+const handleLogin = async (req, res) => {
     try {
-        const { username, password } = req.body;
-        const user = await User.findOne({ username });
-        if (!user) return res.status(400).json({ error: 'Username atau Password salah' });
+        // Ambil input dari req.body (bisa dikirim sebagai 'username', 'email', atau 'loginInput')
+        const loginInput = req.body.username || req.body.email || req.body.loginInput;
+        const password = req.body.password;
 
+        if (!loginInput || !password) {
+            return res.status(400).json({ error: 'Username/Email dan Password wajib diisi' });
+        }
+
+        // Cari user di database yang match dengan Username ATAU Email
+        const user = await User.findOne({
+            $or: [
+                { username: loginInput },
+                { email: loginInput }
+            ]
+        });
+
+        if (!user) {
+            return res.status(400).json({ error: 'Username/Email atau Password salah' });
+        }
+
+        // Bandingkan password yang diinput dengan password terenkripsi di DB
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ error: 'Username atau Password salah' });
+        if (!isMatch) {
+            return res.status(400).json({ error: 'Username/Email atau Password salah' });
+        }
 
+        // Simpan data sesi login
         req.session.userId = user._id;
         req.session.username = user.username;
 
+        console.log(`✅ User ${user.username} berhasil login.`);
         res.json({ message: 'Login berhasil', username: user.username });
     } catch (err) {
+        console.error("❌ Detail Error Login:", err);
         res.status(500).json({ error: err.message });
     }
-});
+};
+
+// Menerima dua route (dengan/tanpa /auth/) agar kompatibel dengan frontend
+app.post('/api/login', handleLogin);
+app.post('/api/auth/login', handleLogin);
 
 // Logout User
 app.post('/api/auth/logout', (req, res) => {
