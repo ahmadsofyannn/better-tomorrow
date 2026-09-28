@@ -70,7 +70,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // =============================================================
 
 // String Koneksi MongoDB Atlas
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://admin:mongomongoliadb@admin.2brzuxo.mongodb.net/better_tomorrow?retryWrites=true&w=majority';
+const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI)
     .then(() => console.log('✅ Terhubung ke MongoDB Database'))
